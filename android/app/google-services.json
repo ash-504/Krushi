@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "475702580051",
+    "project_id": "krushi-2fe16",
+    "storage_bucket": "krushi-2fe16.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:475702580051:android:8cf01cb3c03275701247a6",
+        "android_client_info": {
+          "package_name": "com.example.krushi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBV_mi71dq27SGwin34xbxmmBwNB1-CK1U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

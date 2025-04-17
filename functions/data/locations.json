@@ -1,0 +1,35 @@
+[
+    {
+      "state": "Maharashtra",
+      "districts": [
+        {
+          "district": "Pune",
+          "talukas": [
+            {
+              "taluka": "Mulshi",
+              "villages": ["Lavale", "Pirangut", "Paud"]
+            },
+            {
+              "taluka": "Baramati",
+              "villages": ["Morgaon", "Katewadi"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "state": "Karnataka",
+      "districts": [
+        {
+          "district": "Bengaluru Urban",
+          "talukas": [
+            {
+              "taluka": "Bangalore South",
+              "villages": ["Jayanagar", "Electronic City"]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+  
