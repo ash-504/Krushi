@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'farmer_address.dart';
+import 'farmer_home_address.dart';
 
 class FarmerPersonalDetails extends StatefulWidget {
   @override
