@@ -1,0 +1,330 @@
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:io';
+
+import 'farmer_review.dart';
+
+class DocumentDetails extends StatefulWidget {
+  final Map<String, dynamic> signupData;
+
+  const DocumentDetails({Key? key, required this.signupData}) : super(key: key);
+
+  @override
+  State<DocumentDetails> createState() => _DocumentDetails();
+}
+
+class _DocumentDetails extends State<DocumentDetails> {
+  final _formKey = GlobalKey<FormState>();
+
+  late Map<String, dynamic> signupData = {};
+
+  @override
+  void initState() {
+    super.initState();
+    signupData = widget.signupData;
+  }
+
+  File? aadharImage;
+  File? panImage;
+  File? passbookImage;
+  File? fieldImage;
+
+  double aadharProgress = 0.0;
+  double panProgress = 0.0;
+  double passbookProgress = 0.0;
+  double fieldProgress = 0.0;
+
+  Future<void> pickandUploadImage(String key) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      File image = File(pickedFile.path);
+      String fileName = pickedFile.name;
+
+      final storageRef = FirebaseStorage.instance.ref().child(
+        'documents/$key/$fileName',
+      );
+      final uploadTask = storageRef.putFile(image);
+
+      uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
+        setState(() {
+          if (key == 'aadhar') {
+            aadharProgress =
+                snapshot.bytesTransferred.toDouble() /
+                snapshot.totalBytes.toDouble();
+          } else if (key == 'pan') {
+            panProgress =
+                snapshot.bytesTransferred.toDouble() /
+                snapshot.totalBytes.toDouble();
+          } else if (key == 'passbook') {
+            passbookProgress =
+                snapshot.bytesTransferred.toDouble() /
+                snapshot.totalBytes.toDouble();
+          } else if (key == 'field') {
+            fieldProgress =
+                snapshot.bytesTransferred.toDouble() /
+                snapshot.totalBytes.toDouble();
+          }
+        });
+      });
+
+      final snapshot = await uploadTask;
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+
+      FirebaseFirestore.instance.collection('farmer_documents').add({
+        '$key': downloadUrl,
+      });
+
+      setState(() {
+        if (key == 'aadhar') aadharImage = image;
+        if (key == 'pan') panImage = image;
+        if (key == 'passbook') passbookImage = image;
+        if (key == 'field') fieldImage = image;
+      });
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('$key uploaded successfully')));
+    }
+  }
+
+  Widget buildDocumentBox(
+    String label,
+    String key,
+    File? image,
+    double progress,
+  ) {
+    return GestureDetector(
+      onTap: () => pickandUploadImage(key),
+      child: Container(
+        height: 120,
+        padding: EdgeInsets.all(12),
+        margin: EdgeInsets.symmetric(vertical: 10),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.green),
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.grey[100],
+        ),
+        child: Center(
+          child:
+              image != null
+                  ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.file(
+                        image,
+                        width: 60,
+                        height: 60,
+                        fit: BoxFit.cover,
+                      ),
+
+                      SizedBox(height: 10),
+
+                      LinearProgressIndicator(
+                        value: progress,
+                        color: Colors.green,
+                        backgroundColor: Colors.grey[300],
+                      ),
+                    ],
+                  )
+                  : Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.upload_file, color: Colors.grey, size: 40),
+                      SizedBox(height: 8),
+                      Text(label, style: TextStyle(color: Colors.grey[700])),
+                    ],
+                  ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color.fromRGBO(239, 239, 239, 1),
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_outlined, color: Colors.black),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              SizedBox(height: 50),
+
+              Text(
+                'Step 7: Document Uploads',
+                style: TextStyle(
+                  fontSize: 25,
+                  color: Color.fromRGBO(12, 141, 3, 1),
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+
+              SizedBox(height: 50),
+
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8),
+                child: Row(
+                  children: [
+                    Text(
+                      'Aadhar Card',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black54,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+
+                    SizedBox(height: 10),
+
+                    Expanded(
+                      child: buildDocumentBox(
+                        "Upload Aadhar Card",
+                        "aadhar",
+                        aadharImage,
+                        aadharProgress,
+                      ),
+                    ),
+
+                    SizedBox(width: 12),
+
+                    Text(
+                      'Pan Card',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black54,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+
+                    SizedBox(width: 12),
+
+                    Expanded(
+                      child: buildDocumentBox(
+                        "Upload Pan Card",
+                        "pan",
+                        panImage,
+                        panProgress,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: 20),
+
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 30),
+                child: Row(
+                  children: [
+                    Text(
+                      'Passbook',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black54,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+
+                    SizedBox(height: 10),
+
+                    Expanded(
+                      child: buildDocumentBox(
+                        "Upload Passbook",
+                        "passbook",
+                        passbookImage,
+                        passbookProgress,
+                      ),
+                    ),
+
+                    SizedBox(width: 12),
+
+                    Text(
+                      'Field',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black54,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+
+                    SizedBox(height: 10),
+
+                    Expanded(
+                      child: buildDocumentBox(
+                        "Upload Field Image",
+                        "field",
+                        fieldImage,
+                        fieldProgress,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+
+              SizedBox(height: 60),
+
+              ElevatedButton(
+                onPressed: () {
+                  if (aadharImage == null ||
+                      panImage == null ||
+                      passbookImage == null ||
+                      fieldImage == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Please upload all required documents'),
+                      ),
+                    );
+
+                    return;
+                  }
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) => ReviewDetails(signupData: signupData),
+                    ),
+                  );
+                },
+
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromRGBO(12, 141, 3, 1),
+                  foregroundColor: Color.fromRGBO(239, 239, 239, 1),
+                  padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
+                  textStyle: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  elevation: 5,
+                ),
+
+                child: Text("Next"),
+              ),
+
+              SizedBox(height: 100),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

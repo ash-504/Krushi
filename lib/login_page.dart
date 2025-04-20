@@ -192,36 +192,36 @@ class _LoginPageState extends State<LoginPage> {
 
             SizedBox(height: 10),
 
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SignUp()),
-                );
-              },
+            // ElevatedButton(
+            //   onPressed: () {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(builder: (context) => SignUp()),
+            //     );
+            //   },
 
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color.fromRGBO(12, 141, 3, 1),
-                foregroundColor: Color.fromRGBO(239, 239, 239, 1),
-                padding: EdgeInsets.only(
-                  left: 90,
-                  right: 90,
-                  top: 15,
-                  bottom: 15,
-                ),
-                textStyle: TextStyle(
-                  fontFamily: "Urbanist",
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                elevation: 5,
-              ),
+            //   style: ElevatedButton.styleFrom(
+            //     backgroundColor: Color.fromRGBO(12, 141, 3, 1),
+            //     foregroundColor: Color.fromRGBO(239, 239, 239, 1),
+            //     padding: EdgeInsets.only(
+            //       left: 90,
+            //       right: 90,
+            //       top: 15,
+            //       bottom: 15,
+            //     ),
+            //     textStyle: TextStyle(
+            //       fontFamily: "Urbanist",
+            //       fontSize: 18,
+            //       fontWeight: FontWeight.bold,
+            //     ),
+            //     shape: RoundedRectangleBorder(
+            //       borderRadius: BorderRadius.circular(10),
+            //     ),
+            //     elevation: 5,
+            //   ),
 
-              child: Text("Sign Up"),
-            ),
+            //   child: Text("Sign Up"),
+            //),
           ],
         ),
       ),

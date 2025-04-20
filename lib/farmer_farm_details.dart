@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 
-//import 'farmer_land_details.dart';
+import 'farmer_land_details.dart';
 
 class FarmLocationDetails extends StatefulWidget {
+  final Map<String, dynamic> signupData;
+
+  const FarmLocationDetails({Key? key, required this.signupData})
+    : super(key: key);
+
   @override
   State<FarmLocationDetails> createState() => _FarmLocationDetails();
 }
 
 class _FarmLocationDetails extends State<FarmLocationDetails> {
   final _formKey = GlobalKey<FormState>();
+
+  late Map<String, dynamic> signupData;
 
   final TextEditingController plotnumberController = TextEditingController();
   final TextEditingController areaController = TextEditingController();
@@ -18,13 +25,12 @@ class _FarmLocationDetails extends State<FarmLocationDetails> {
   final TextEditingController farmpincodeController = TextEditingController();
   final TextEditingController farmlandmarkController = TextEditingController();
 
-  final Map<String, dynamic> signupData = {};
-
   String? selectedState;
 
   @override
   void initState() {
     super.initState();
+    signupData = widget.signupData;
     selectedState = "Maharashtra";
   }
 
@@ -447,21 +453,21 @@ class _FarmLocationDetails extends State<FarmLocationDetails> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    signupData['pltnumber'] = plotnumberController.text;
-                    signupData['farmstreet'] = areaController.text;
-                    signupData['farmvillage'] = farmvillageController.text;
-                    signupData['farmtaluka'] = farmtalukaController.text;
-                    signupData['farmdistrict'] = farmdistrictController.text;
-                    signupData['farmstate'] = selectedState;
-                    signupData['farmpincode'] = farmpincodeController.text;
-                    signupData['farmlandmark'] = farmlandmarkController.text;
+                    signupData['farmaddress'] = {
+                      'plotnumber': plotnumberController.text,
+                      'street': areaController.text,
+                      'village': farmvillageController.text,
+                      'taluka': farmtalukaController.text,
+                      'district': farmdistrictController.text,
+                      'state': selectedState,
+                      'pincode': farmpincodeController.text,
+                      'landmark': farmlandmarkController.text,
+                    };
 
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => LandandCropDetails(),
-                    //   ),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LandDetails(signupData: signupData)),
+                    );
                   } else {
                     print("Enter valid inputs");
                   }

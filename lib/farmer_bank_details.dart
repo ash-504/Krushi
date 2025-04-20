@@ -1,22 +1,45 @@
 import 'package:flutter/material.dart';
 
-import 'farmer_home_address.dart';
+import 'farmer_document_details.dart';
 
-class FarmerPersonalDetails extends StatefulWidget {
+class BankDetails extends StatefulWidget {
+  final Map<String, dynamic> signupData;
+
+  const BankDetails({Key? key, required this.signupData}) : super(key: key);
   @override
-  State<FarmerPersonalDetails> createState() => _FarmerPersonalDetails();
+  State<BankDetails> createState() => _BankDetails();
 }
 
-class _FarmerPersonalDetails extends State<FarmerPersonalDetails> {
+class _BankDetails extends State<BankDetails> {
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController firstnameController = TextEditingController();
-  final TextEditingController lastnameController = TextEditingController();
-  final TextEditingController dateController = TextEditingController();
+  final TextEditingController accountholdernameController =
+      TextEditingController();
+  final TextEditingController accountnumberController = TextEditingController();
+  final TextEditingController confirmaccountnumberController =
+      TextEditingController();
+  final TextEditingController ifsccodeController = TextEditingController();
 
-  String? gender;
+  String? _validateIFSC(String? value) {
+    if (value == null || value.isEmpty) return 'Enter IFSC code';
+    final pattern = RegExp(r'^[A-Z]{4}0[A-Z0-9]{6}$');
+    return pattern.hasMatch(value) ? null : 'Invalid IFSC code format';
+  }
 
-  final Map<String, dynamic> signupData = {};
+  String? _validateAccountNumber(String? value) {
+    if (value == null || value.isEmpty) return 'Enter account number';
+    if (value.length < 9 || value.length > 18)
+      return 'Account number seems invalid';
+    return null;
+  }
+
+  late Map<String, dynamic> signupData = {};
+
+  @override
+  void initState() {
+    super.initState();
+    signupData = widget.signupData;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +65,7 @@ class _FarmerPersonalDetails extends State<FarmerPersonalDetails> {
               SizedBox(height: 50),
 
               Text(
-                'Step 1: Personal Details',
+                'Step 6: Bank Details',
                 style: TextStyle(
                   fontSize: 25,
                   color: Color.fromRGBO(12, 141, 3, 1),
@@ -59,7 +82,7 @@ class _FarmerPersonalDetails extends State<FarmerPersonalDetails> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Enter First Name',
+                      'Account Holder Name',
                       style: TextStyle(
                         fontSize: 20,
                         color: Colors.black54,
@@ -70,9 +93,9 @@ class _FarmerPersonalDetails extends State<FarmerPersonalDetails> {
                     SizedBox(height: 10),
 
                     TextFormField(
-                      controller: firstnameController,
+                      controller: accountholdernameController,
                       decoration: InputDecoration(
-                        labelText: "Enter First Name",
+                        labelText: "Enter Full Name (As in the book)",
                         floatingLabelStyle: TextStyle(
                           color: Colors.grey,
                           fontWeight: FontWeight.bold,
@@ -89,18 +112,9 @@ class _FarmerPersonalDetails extends State<FarmerPersonalDetails> {
                       ),
                       keyboardType: TextInputType.name,
                       validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return 'Please enter your first name';
-                        } else if (!RegExp(
-                          r'^[a-zA-Z\s]+$',
-                        ).hasMatch(value.trim())) {
-                          return 'Only letters are allowed';
-                        } else if (value.trim().length < 3) {
-                          return 'Name is too short';
-                        } else if (value.trim().length > 15) {
-                          return 'Name is too long';
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your full name';
                         }
-
                         return null;
                       },
                     ),
@@ -116,7 +130,7 @@ class _FarmerPersonalDetails extends State<FarmerPersonalDetails> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Enter Last Name',
+                      'Account Number',
                       style: TextStyle(
                         fontSize: 20,
                         color: Colors.black54,
@@ -127,9 +141,9 @@ class _FarmerPersonalDetails extends State<FarmerPersonalDetails> {
                     SizedBox(height: 10),
 
                     TextFormField(
-                      controller: lastnameController,
+                      controller: accountnumberController,
                       decoration: InputDecoration(
-                        labelText: "Enter Last Name",
+                        labelText: "Enter Account Number",
                         floatingLabelStyle: TextStyle(
                           color: Colors.grey,
                           fontWeight: FontWeight.bold,
@@ -144,22 +158,8 @@ class _FarmerPersonalDetails extends State<FarmerPersonalDetails> {
                           ),
                         ),
                       ),
-                      keyboardType: TextInputType.name,
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return 'Please enter your last name';
-                        } else if (!RegExp(
-                          r'^[a-zA-Z\s]+$',
-                        ).hasMatch(value.trim())) {
-                          return 'Only letters are allowed';
-                        } else if (value.trim().length < 3) {
-                          return 'Name is too short';
-                        } else if (value.trim().length > 15) {
-                          return 'Name is too long';
-                        }
-
-                        return null;
-                      },
+                      keyboardType: TextInputType.number,
+                      validator: _validateAccountNumber,
                     ),
                   ],
                 ),
@@ -173,93 +173,7 @@ class _FarmerPersonalDetails extends State<FarmerPersonalDetails> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Gender',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black54,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-
-                    SizedBox(height: 10),
-
-                    Row(
-                      children: [
-                        Radio<String>(
-                          value: 'Male',
-                          groupValue: gender,
-                          onChanged: (value) {
-                            setState(() {
-                              gender = value;
-                            });
-                          },
-                        ),
-
-                        Text(
-                          'Male',
-                          style: TextStyle(
-                            fontSize: 19,
-                            fontWeight: FontWeight.w400,
-                            fontStyle: FontStyle.normal,
-                          ),
-                        ),
-
-                        SizedBox(width: 5),
-
-                        Radio<String>(
-                          value: 'Female',
-                          groupValue: gender,
-                          onChanged: (value) {
-                            setState(() {
-                              gender = value;
-                            });
-                          },
-                        ),
-
-                        Text(
-                          'Female',
-                          style: TextStyle(
-                            fontSize: 19,
-                            fontWeight: FontWeight.w400,
-                            fontStyle: FontStyle.normal,
-                          ),
-                        ),
-
-                        SizedBox(width: 5),
-
-                        Radio<String>(
-                          value: 'Others',
-                          groupValue: gender,
-                          onChanged: (value) {
-                            setState(() {
-                              gender = value;
-                            });
-                          },
-                        ),
-
-                        Text(
-                          'Others',
-                          style: TextStyle(
-                            fontSize: 19,
-                            fontWeight: FontWeight.w400,
-                            fontStyle: FontStyle.normal,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-
-              SizedBox(height: 20),
-
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Date of Birth',
+                      'Confirm Account Number',
                       style: TextStyle(
                         fontSize: 20,
                         color: Colors.black54,
@@ -270,30 +184,73 @@ class _FarmerPersonalDetails extends State<FarmerPersonalDetails> {
                     SizedBox(height: 10),
 
                     TextFormField(
-                      controller: dateController,
-                      readOnly: true,
+                      controller: confirmaccountnumberController,
                       decoration: InputDecoration(
-                        labelText: 'Date of Birth',
+                        labelText: "Confirm Account Number",
+                        floatingLabelStyle: TextStyle(
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
                         border: OutlineInputBorder(),
-                        suffixIcon: Icon(Icons.calendar_today),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: BorderSide(
+                            color: Colors.green,
+                            width: 1.5,
+                          ),
+                        ),
                       ),
-
-                      onTap: () async {
-                        DateTime? pickedDate = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(1900),
-                          lastDate: DateTime.now(),
-                        );
-
-                        if (pickedDate != null) {
-                          String formattedDate =
-                              "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
-                          setState(() {
-                            dateController.text = formattedDate;
-                          });
-                        }
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value != accountnumberController.text)
+                          return 'Account numbers do not match';
+                        return _validateAccountNumber(value);
                       },
+                    ),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: 20),
+
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 30),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'IFSC Code',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black54,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+
+                    SizedBox(height: 10),
+
+                    TextFormField(
+                      controller: ifsccodeController,
+                      decoration: InputDecoration(
+                        labelText: "Enter IFSC Code",
+                        floatingLabelStyle: TextStyle(
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                        border: OutlineInputBorder(),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: BorderSide(
+                            color: Colors.green,
+                            width: 1.5,
+                          ),
+                        ),
+                      ),
+                      textCapitalization: TextCapitalization.characters,
+                      keyboardType: TextInputType.name,
+                      validator: _validateIFSC,
                     ),
                   ],
                 ),
@@ -304,19 +261,18 @@ class _FarmerPersonalDetails extends State<FarmerPersonalDetails> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    signupData['personaldetails'] = {
-                      'firstname': firstnameController.text,
-                      'lastname': lastnameController.text,
-                      'gender': gender,
-                      'dateofbirth': dateController.text,
+                    signupData['bankDetails'] = {
+                      'accountholdername': accountholdernameController.text,
+                      'accountnumber': accountnumberController.text,
+                      'ifsccode': ifsccodeController.text,
                     };
-
+                    
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder:
                             (context) =>
-                                FarmerAddressDetails(signupData: signupData),
+                                DocumentDetails(signupData: signupData),
                       ),
                     );
                   } else {

@@ -3,12 +3,19 @@ import 'package:flutter/material.dart';
 import 'farmer_farm_details.dart';
 
 class FarmerAddressDetails extends StatefulWidget {
+  final Map<String, dynamic> signupData;
+
+  const FarmerAddressDetails({Key? key, required this.signupData})
+    : super(key: key);
+
   @override
   State<FarmerAddressDetails> createState() => _FarmerAddressDetails();
 }
 
 class _FarmerAddressDetails extends State<FarmerAddressDetails> {
   final _formKey = GlobalKey<FormState>();
+
+  late Map<String, dynamic> signupData;
 
   final TextEditingController housenumberController = TextEditingController();
   final TextEditingController streetController = TextEditingController();
@@ -18,13 +25,12 @@ class _FarmerAddressDetails extends State<FarmerAddressDetails> {
   final TextEditingController pincodeController = TextEditingController();
   final TextEditingController landmarkController = TextEditingController();
 
-  final Map<String, dynamic> signupData = {};
-
   String? selectedState;
 
   @override
   void initState() {
     super.initState();
+    signupData = widget.signupData;
     selectedState = "Maharashtra";
   }
 
@@ -447,19 +453,21 @@ class _FarmerAddressDetails extends State<FarmerAddressDetails> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    signupData['housenumber'] = housenumberController.text;
-                    signupData['street'] = streetController.text;
-                    signupData['village'] = villageController.text;
-                    signupData['taluka'] = talukaController.text;
-                    signupData['district'] = districtController.text;
-                    signupData['state'] = selectedState;
-                    signupData['pincode'] = pincodeController.text;
-                    signupData['landmark'] = landmarkController.text;
+                    signupData['homeaddress'] = {
+                      'housenumber': housenumberController.text,
+                      'street': streetController.text,
+                      'village': villageController.text,
+                      'taluka': talukaController.text,
+                      'district': districtController.text,
+                      'state': selectedState,
+                      'pincode': pincodeController.text,
+                      'landmark': landmarkController.text,
+                    };
 
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => FarmLocationDetails(),
+                        builder: (context) => FarmLocationDetails(signupData: signupData),
                       ),
                     );
                   } else {
