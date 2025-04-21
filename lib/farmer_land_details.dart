@@ -215,6 +215,7 @@ class _LandDetails extends State<LandDetails> {
                               if (value == null || value.isEmpty) {
                                 return "Please select a unit";
                               }
+                              return null;
                             },
                           ),
                         ),

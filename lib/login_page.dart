@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'otp_page.dart';
-import 'sign_up.dart';
 import 'home_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -155,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             
             SizedBox(height: 150),
-
+            
             ElevatedButton(
               onPressed: sendOTP,
 
@@ -180,14 +179,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
 
               child: Text("Get OTP"),
-            ),
-
-            SizedBox(height: 10),
-
-            Padding(
-              padding: EdgeInsets.only(left: 90, right: 90, top: 5, bottom: 5),
-
-              child: Divider(color: Colors.grey, thickness: 2),
             ),
 
             SizedBox(height: 10),

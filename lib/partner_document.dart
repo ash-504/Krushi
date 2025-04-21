@@ -4,18 +4,19 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
 
-import 'farmer_review.dart';
+import 'partner_review.dart';
 
-class DocumentDetails extends StatefulWidget {
+class PartnerDocumentDetails extends StatefulWidget {
   final Map<String, dynamic> signupData;
 
-  const DocumentDetails({Key? key, required this.signupData}) : super(key: key);
+  const PartnerDocumentDetails({Key? key, required this.signupData})
+    : super(key: key);
 
   @override
-  State<DocumentDetails> createState() => _DocumentDetails();
+  State<PartnerDocumentDetails> createState() => _PartnerDocumentDetails();
 }
 
-class _DocumentDetails extends State<DocumentDetails> {
+class _PartnerDocumentDetails extends State<PartnerDocumentDetails> {
   final _formKey = GlobalKey<FormState>();
 
   late Map<String, dynamic> signupData = {};
@@ -29,12 +30,14 @@ class _DocumentDetails extends State<DocumentDetails> {
   File? aadharImage;
   File? panImage;
   File? passbookImage;
-  File? fieldImage;
+  File? rcImage;
+  File? licenseImage;
 
   double aadharProgress = 0.0;
   double panProgress = 0.0;
   double passbookProgress = 0.0;
-  double fieldProgress = 0.0;
+  double rcProgress = 0.0;
+  double licenseProgress = 0.0;
 
   Future<void> pickandUploadImage(String key) async {
     final picker = ImagePicker();
@@ -63,8 +66,12 @@ class _DocumentDetails extends State<DocumentDetails> {
             passbookProgress =
                 snapshot.bytesTransferred.toDouble() /
                 snapshot.totalBytes.toDouble();
-          } else if (key == 'field') {
-            fieldProgress =
+          } else if (key == 'rc') {
+            rcProgress =
+                snapshot.bytesTransferred.toDouble() /
+                snapshot.totalBytes.toDouble();
+          } else if (key == 'license') {
+            licenseProgress =
                 snapshot.bytesTransferred.toDouble() /
                 snapshot.totalBytes.toDouble();
           }
@@ -78,7 +85,7 @@ class _DocumentDetails extends State<DocumentDetails> {
         signupData[key] = downloadUrl;
       });
 
-      FirebaseFirestore.instance.collection('farmer_documents').add({
+      FirebaseFirestore.instance.collection('partner_documents').add({
         '$key': downloadUrl,
       });
 
@@ -86,7 +93,8 @@ class _DocumentDetails extends State<DocumentDetails> {
         if (key == 'aadhar') aadharImage = image;
         if (key == 'pan') panImage = image;
         if (key == 'passbook') passbookImage = image;
-        if (key == 'field') fieldImage = image;
+        if (key == 'rc') rcImage = image;
+        if (key == 'license') licenseImage = image;
       });
 
       ScaffoldMessenger.of(
@@ -170,7 +178,7 @@ class _DocumentDetails extends State<DocumentDetails> {
               SizedBox(height: 50),
 
               Text(
-                'Step 7: Document Uploads',
+                'Step 4: Document Uploads',
                 style: TextStyle(
                   fontSize: 25,
                   color: Color.fromRGBO(12, 141, 3, 1),
@@ -255,7 +263,7 @@ class _DocumentDetails extends State<DocumentDetails> {
                     SizedBox(width: 145),
 
                     Text(
-                      'Field',
+                      'RC',
                       style: TextStyle(
                         fontSize: 20,
                         color: Colors.black54,
@@ -285,10 +293,46 @@ class _DocumentDetails extends State<DocumentDetails> {
 
                     Expanded(
                       child: buildDocumentBox(
-                        "Upload Field Image",
+                        "Upload RC",
                         "field",
-                        fieldImage,
-                        fieldProgress,
+                        rcImage,
+                        rcProgress,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: 30),
+
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 50),
+                child: Row(
+                  children: [
+                    Text(
+                      'License',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black54,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: 30),
+
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: buildDocumentBox(
+                        "Upload LIcense",
+                        "license",
+                        licenseImage,
+                        licenseProgress,
                       ),
                     ),
                   ],
@@ -302,7 +346,8 @@ class _DocumentDetails extends State<DocumentDetails> {
                   if (aadharImage == null ||
                       panImage == null ||
                       passbookImage == null ||
-                      fieldImage == null) {
+                      rcImage == null ||
+                      licenseImage == null) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Please upload all required documents'),
@@ -316,7 +361,7 @@ class _DocumentDetails extends State<DocumentDetails> {
                     context,
                     MaterialPageRoute(
                       builder:
-                          (context) => ReviewDetails(signupData: signupData),
+                          (context) => PartnerReviewDetails(signupData: signupData),
                     ),
                   );
                 },

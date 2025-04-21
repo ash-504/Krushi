@@ -31,11 +31,11 @@ class SignUp extends StatelessWidget {
 
             SizedBox(height: 20),
 
-            buildNavigationButton(context, "Customer", CustomerSignUp()),
+            buildNavigationButton(context, "Customer", CustomerPersonalDetails()),
 
             SizedBox(height: 20),
 
-            buildNavigationButton(context, "Partner", PartnerSignUp()),
+            buildNavigationButton(context, "Partner", PartnerPersonalDetails()),
           ],
         )
       ),
