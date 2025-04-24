@@ -294,7 +294,7 @@ class _PartnerDocumentDetails extends State<PartnerDocumentDetails> {
                     Expanded(
                       child: buildDocumentBox(
                         "Upload RC",
-                        "field",
+                        "rc",
                         rcImage,
                         rcProgress,
                       ),

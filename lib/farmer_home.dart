@@ -45,7 +45,7 @@ class _FarmerHomeState extends State<FarmerHome> {
               Row(
                 children: [
                   const CircleAvatar(
-                    backgroundImage: AssetImage('assets/images/profile.png'),
+                    backgroundImage: AssetImage('assets/icons/profile.jpg'),
                     radius: 24,
                   ),
                   const SizedBox(width: 12),

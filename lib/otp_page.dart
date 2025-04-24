@@ -57,7 +57,7 @@ class _OTPVerificationPage extends State<OTPVerification> {
         } else if (role == 'customer') {
           landingPage = CustomerHome();
         } else if (role == 'partner') {
-          landingPage = PartnerHome();
+          landingPage = DeliveryHomePage();
         } else {
           landingPage = SignUp();
         }

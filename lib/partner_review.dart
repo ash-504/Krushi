@@ -211,7 +211,7 @@ class PartnerReviewDetails extends StatelessWidget {
 
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => PartnerHome()),
+                        MaterialPageRoute(builder: (context) => DeliveryHomePage()),
                       );
                     } catch (e) {
                       ScaffoldMessenger.of(context).showSnackBar(

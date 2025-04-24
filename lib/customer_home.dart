@@ -21,17 +21,17 @@ class CustomerHomeState extends State<CustomerHome> {
   Future<Map<String, List<Map<String, String>>>> fetchProducts() async {
     return {
       'Vegetables': [
-        {'title': 'Tomatoes', 'image': 'lib/assets/images/Tomato.png'},
-        {'title': 'Spinach', 'image': 'lib/assets/images/Spinach.png'},
-        {'title': 'LadyFinger', 'image': 'lib/assets/images/LadyFinger.png'},
+        {'title': 'Tomatoes', 'image': 'assets/images/Tomato.png'},
+        {'title': 'Spinach', 'image': 'assets/images/Spinach.png'},
+        {'title': 'LadyFinger', 'image': 'assets/images/LadyFinger.png'},
       ],
       'Fruits': [
-        {'title': 'Bananas', 'image': 'lib/assets/images/Banana.png'},
-        {'title': 'Strawberries', 'image': 'lib/assets/images/Strawberry.png'},
+        {'title': 'Bananas', 'image': 'assets/images/Banana.png'},
+        {'title': 'Strawberries', 'image': 'assets/images/Strawberry.png'},
       ],
       'Grains': [
-        {'title': 'Rice', 'image': 'lib/assets/images/Rice.png'},
-        {'title': 'Wheat', 'image': 'lib/assets/images/Wheat.png'},
+        {'title': 'Rice', 'image': 'assets/images/Rice.png'},
+        {'title': 'Wheat', 'image': 'assets/images/Wheat.png'},
       ],
     };
   }
@@ -90,7 +90,7 @@ class CustomerHomeState extends State<CustomerHome> {
                       Row(
                         children: [
                           const CircleAvatar(
-                            backgroundImage: AssetImage('assets/images/profile.png'),
+                            backgroundImage: AssetImage('assets/icons/profile.jpg'),
                             radius: 20,
                           ),
                           const SizedBox(width: 10),
