@@ -1,4 +1,4 @@
-# krushi
+# Krushi
 
 A new Flutter project.
 
